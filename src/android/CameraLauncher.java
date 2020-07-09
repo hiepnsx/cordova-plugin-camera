@@ -87,6 +87,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private static final String PNG_EXTENSION = "." + PNG_TYPE;
     private static final String PNG_MIME_TYPE = "image/png";
     private static final String JPEG_MIME_TYPE = "image/jpeg";
+    private static final String HEIF_MIME_TYPE = "image/heif";
+    // Samsung Galaxy S10+
+    private static final String HEIC_MIME_TYPE = "image/heic";
     private static final String GET_PICTURE = "Get Picture";
     private static final String GET_VIDEO = "Get Video";
     private static final String GET_All = "Get All";
@@ -681,6 +684,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         String uriString = uri.toString();
         String mimeType = FileHelper.getMimeType(uriString, this.cordova);
+        LOG.d(LOG_TAG, "MimeType is: " + mimeType);
+
+        if (HEIC_MIME_TYPE.equalsIgnoreCase(mimeType) || HEIF_MIME_TYPE.equalsIgnoreCase(mimeType)) {
+            this.failPicture("[HEIC_PATH]" + fileLocation);
+            return;
+        }
 
         // If you ask for video or the selected file doesn't have JPEG or PNG mime type
         //  there will be no attempt to resize any returned data
